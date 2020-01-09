@@ -15,26 +15,31 @@ class Trip implements ImportDatasInterface
      * @ORM\Column(type="string", length=64)
      */
     private $id;
+
     /**
      * @var Route
      * @ORM\ManyToOne(targetEntity="Route", inversedBy="trips")
      */
     private $route;
+
     /**
      * @var StopTime[]
      * @ORM\OneToMany(targetEntity="StopTime", mappedBy="trip")
      */
     private $stopTimes;
+
     /**
      * @var string
      * @ORM\Column(type="string", length=128)
      */
     private $headsign;
+
     /**
      * @var int
      * @ORM\Column(type="smallint")
      */
     private $direction;
+
     /**
      * @var bool
      * @ORM\Column(type="boolean")
@@ -45,10 +50,10 @@ class Trip implements ImportDatasInterface
      * Trip constructor.
      *
      * @param string $id
-     * @param Route $route
+     * @param Route  $route
      * @param string $headsign
      * @param string $direction
-     * @param bool $isWheelchairAccessible
+     * @param bool   $isWheelchairAccessible
      */
     private function __construct(string $id, Route $route, string $headsign, string $direction, bool $isWheelchairAccessible)
     {
@@ -67,6 +72,6 @@ class Trip implements ImportDatasInterface
      */
     public static function createFromCsv(array $datas): self
     {
-        return new self($datas['trip_id'], $datas['route'], $datas['trip_headsign'], $datas['direction_id'], 1 == $datas['wheelchair_accessible']);
+        return new self($datas['trip_id'], $datas['route'], $datas['trip_headsign'], $datas['direction_id'], 1 === $datas['wheelchair_accessible']);
     }
 }

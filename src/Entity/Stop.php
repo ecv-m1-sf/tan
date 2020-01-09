@@ -73,7 +73,7 @@ class Stop implements ImportDatasInterface
      * @param Stop   $parent
      * @param bool   $wheelchairBoarding
      */
-    public function __construct(string $id, string $name, string $description, float $latitude, float $longitude, int $locationType, ?Stop $parent, bool $wheelchairBoarding)
+    public function __construct(string $id, string $name, string $description, float $latitude, float $longitude, int $locationType, ?self $parent, bool $wheelchairBoarding)
     {
         $this->id = $id;
         $this->stopTimes = new ArrayCollection();

@@ -20,34 +20,39 @@ class StopTime implements ImportDatasInterface
      * @ORM\ManyToOne(targetEntity="Trip", inversedBy="stopTimes")
      */
     private $trip;
+
     /**
      * @var Stop
      * @ORM\ManyToOne(targetEntity="Stop", inversedBy="stopTimes")
      */
     private $stop;
+
     /**
      * @var \DateTime
      * @ORM\Column(type="time")
      */
     private $arrival;
+
     /**
      * @var \DateTime
      * @ORM\Column(type="time")
      */
     private $departure;
+
     /**
      * @var int
      * @ORM\Column(type="smallint")
      */
     private $stopSequence;
+
     /**
      * StopTime constructor.
-     * @param $id
-     * @param Trip $trip
-     * @param Stop $stop
+     *
+     * @param Trip      $trip
+     * @param Stop      $stop
      * @param \DateTime $arrival
      * @param \DateTime $departure
-     * @param int $stopSequence
+     * @param int       $stopSequence
      */
     public function __construct(Trip $trip, Stop $stop, \DateTime $arrival, \DateTime $departure, int $stopSequence)
     {
@@ -57,8 +62,10 @@ class StopTime implements ImportDatasInterface
         $this->departure = $departure;
         $this->stopSequence = $stopSequence;
     }
+
     /**
      * @param array $datas
+     *
      * @return StopTime
      */
     public static function createFromCsv(array $datas): self

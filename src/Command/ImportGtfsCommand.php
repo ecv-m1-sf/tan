@@ -12,11 +12,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use function Symfony\Component\String\u;
 
 /**
- * Class ImportGtfsCommand
- * @package App\Command
+ * Class ImportGtfsCommand.
  */
 class ImportGtfsCommand extends Command
 {
@@ -45,8 +43,9 @@ class ImportGtfsCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
+     *
      * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -55,9 +54,9 @@ class ImportGtfsCommand extends Command
         $fileName = __DIR__.'/../../datas/'.strtolower($input->getArgument('name')).'s.txt';
         $entityName = 'App\Entity\\'.self::entityNameTransfo($input->getArgument('name'));
         $io->note('Import du fichier : '.$fileName);
-        if ($input->getArgument('name') !== 'stop_time') {
+        if ('stop_time' !== $input->getArgument('name')) {
             $fp = file($fileName);
-            $progressBar = new ProgressBar($output, count($fp));
+            $progressBar = new ProgressBar($output, \count($fp));
         } else {
             $progressBar = new ProgressBar($output);
         }
@@ -68,7 +67,7 @@ class ImportGtfsCommand extends Command
         if (false !== ($handle = fopen($fileName, 'r'))) {
             while (false !== ($data = fgetcsv($handle, 1000, ','))) {
                 ++$i;
-                if (1 == $i) {
+                if (1 === $i) {
                     $keys = $data;
                     continue;
                 }
@@ -76,7 +75,7 @@ class ImportGtfsCommand extends Command
                 $data = $this->loadEntityLink($entityName, $data);
                 $entity = $entityName::createFromCsv($data);
                 $this->em->persist($entity);
-                if (0 == $i % 1000) {
+                if (0 === $i % 1000) {
                     $this->em->flush();
                     $this->em->clear();
                 }
@@ -89,30 +88,34 @@ class ImportGtfsCommand extends Command
         $progressBar->finish();
         $io->newLine(2);
         $io->success('Fin de l\'import');
+
         return 1;
     }
 
     /**
-     * Chargement des entités liés
+     * Chargement des entités liés.
+     *
      * @param string $entityName
-     * @param array $datas
+     * @param array  $datas
+     *
      * @return array
      */
     private function loadEntityLink(string $entityName, array $datas): array
     {
-        if ('App\Entity\Stop' == $entityName) {
+        if ('App\Entity\Stop' === $entityName) {
             $datas['parent'] = null;
-            if (!is_null($datas['parent_station'])) {
+            if (null !== $datas['parent_station']) {
                 $datas['parent'] = $this->em->find(Stop::class, $datas['parent_station']);
             }
         }
-        if ('App\Entity\Trip' == $entityName) {
+        if ('App\Entity\Trip' === $entityName) {
             $datas['route'] = $this->em->find(Route::class, $datas['route_id']);
         }
-        if ('App\Entity\StopTime' == $entityName) {
+        if ('App\Entity\StopTime' === $entityName) {
             $datas['trip'] = $this->em->find(Trip::class, $datas['trip_id']);
             $datas['stop'] = $this->em->find(Stop::class, $datas['stop_id']);
         }
+
         return $datas;
     }
 
